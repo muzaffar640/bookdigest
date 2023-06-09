@@ -17,6 +17,8 @@ const authUser = asyncHandler(async (req, res) => {
       email: user.email,
       role: user.role,
       profilePic: user.profilePic,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     });
   } else {
     res.status(401);
@@ -47,6 +49,8 @@ const getUser = asyncHandler(async (req, res) => {
         email: user.email,
         role: user.role,
         profilePic: user.profilePic,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
       });
     } else {
       throw {
@@ -94,6 +98,8 @@ const registerUser = asyncHandler(async (req, res) => {
     role: "admin",
     //Note: Uploading profile picture is an upcoming feature
     profilePic: "",
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
   });
 
   if (user) {
@@ -105,6 +111,8 @@ const registerUser = asyncHandler(async (req, res) => {
       isDeleted: user.isDeleted,
       role: user.role,
       profilePic: user.profilePic,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     });
   } else {
     res.status(400);
@@ -144,6 +152,8 @@ const updateUser = asyncHandler(async (req, res) => {
       email: updatedUser.email,
       profilePic: updatedUser.profilePic,
       role: updateUser.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     });
   } else {
     res.status(404);
