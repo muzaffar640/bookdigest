@@ -2,6 +2,8 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const generateToken = require("../utils/generateToken");
 
+// Login User API
+
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -22,6 +24,57 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
+// Get User Profile
+
+const getUser = asyncHandler(async (req, res) => {
+  const {
+    params: { userId },
+  } = req;
+  console.log("userId", userId);
+  if (!userId) {
+    res.status(400).send({
+      status: "FAILED",
+      data: { error: "Parameter ':userId' can not be empty" },
+    });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (user) {
+      res.status(200).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        profilePic: user.profilePic,
+      });
+    } else {
+      throw {
+        status: 400,
+        message: `Can't find user with the id "${userId}"`,
+      };
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+// Get All User Profile
+
+const getAllUsers = asyncHandler(async (req, res) => {
+  const userRole = req.user.role;
+  // Role = "admin" || "user"
+  if (userRole === "user") {
+    const allUsers = await User.find();
+    res.status(200).json(allUsers);
+  } else {
+    res.status(401);
+    throw new Error("Unauthorized access");
+  }
+});
+
+// Register User API
+
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
   console.log(req.body);
@@ -38,7 +91,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     //Note: don't wanna hard delete a user
     isDeleted: false,
-    role: "user",
+    role: "admin",
     //Note: Uploading profile picture is an upcoming feature
     profilePic: "",
   });
@@ -59,6 +112,8 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
+// Logout User API
+
 const logoutUser = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
@@ -66,6 +121,8 @@ const logoutUser = asyncHandler(async (req, res) => {
   });
   res.status(200).json({ message: "User Logged Out" });
 });
+
+// Update User API
 
 const updateUser = asyncHandler(async (req, res) => {
   console.log("update", req, req.user);
@@ -94,8 +151,18 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
+// Delete User API
+
 const deleteUser = asyncHandler(async (req, res) => {
   //TODO: update the user isDelete parameter to true
 });
 
-module.exports = { authUser, registerUser, logoutUser, updateUser, deleteUser };
+module.exports = {
+  authUser,
+  getUser,
+  getAllUsers,
+  registerUser,
+  logoutUser,
+  updateUser,
+  deleteUser,
+};
