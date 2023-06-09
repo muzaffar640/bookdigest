@@ -44,6 +44,8 @@ const bookSchema = new mongoose.Schema({
       ref: "Review",
     },
   ],
+  isPublished: Boolean,
+  isDeleted: Boolean,
 });
 
 const Book = mongoose.model("Book", bookSchema);
