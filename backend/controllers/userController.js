@@ -32,7 +32,7 @@ const getUser = asyncHandler(async (req, res) => {
   const {
     params: { userId },
   } = req;
-  console.log("userId", userId);
+
   if (!userId) {
     res.status(400).send({
       status: "FAILED",
@@ -68,7 +68,7 @@ const getUser = asyncHandler(async (req, res) => {
 const getAllUsers = asyncHandler(async (req, res) => {
   const userRole = req.user.role;
   // Role = "admin" || "user"
-  if (userRole === "user") {
+  if (userRole === "admin") {
     const allUsers = await User.find();
     res.status(200).json(allUsers);
   } else {
@@ -81,7 +81,6 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  console.log(req.body);
   const userExist = await User.findOne({ email });
 
   if (userExist) {
@@ -95,7 +94,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     //Note: don't wanna hard delete a user
     isDeleted: false,
-    role: "admin",
+    role: "user",
     //Note: Uploading profile picture is an upcoming feature
     profilePic: "",
     createdAt: user.createdAt,
@@ -133,8 +132,6 @@ const logoutUser = asyncHandler(async (req, res) => {
 // Update User API
 
 const updateUser = asyncHandler(async (req, res) => {
-  console.log("update", req, req.user);
-
   const user = await User.findById(req.user._id);
   if (user) {
     user.name = req.body.name || user.name;
