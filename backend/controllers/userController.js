@@ -85,6 +85,8 @@ const updateUser = asyncHandler(async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
+      profilePic: updatedUser.profilePic,
+      role: updateUser.role,
     });
   } else {
     res.status(404);
