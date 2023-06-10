@@ -5,7 +5,7 @@ const Chapter = require("../models/chapterModel");
 
 const getAllBooks = asyncHandler(async (req, res) => {
   try {
-    const books = await Book.find({ isPublished: false });
+    const books = await Book.find({ isPublished: true });
     res.status(201).json({ books });
   } catch (error) {
     res.status(500);
@@ -72,7 +72,48 @@ const createNewBook = asyncHandler(async (req, res) => {
   }
 });
 
-const updateBook = asyncHandler(async (req, res) => {});
+const updateBook = asyncHandler(async (req, res) => {
+  const { bookId } = req.params;
+  const {
+    title,
+    author,
+    isbn,
+    publicationDate,
+    genre,
+    description,
+    rating,
+    isPublished,
+  } = req.body;
+
+  const book = await Book.findById(bookId);
+  if (book) {
+    book.title = title || book.title;
+    book.author = author || book.author;
+    book.isbn = isbn || book.isbn;
+    book.publicationDate = publicationDate || book.publicationDate;
+    book.genre = genre || book.genre;
+    book.description = description || book.description;
+    book.rating = rating || book.rating;
+    book.isPublished = isPublished || book.isPublished;
+
+    const updatedBook = await book.save();
+
+    res.status(200).send({
+      title: updatedBook.title,
+      author: updatedBook.author,
+      isbn: updatedBook.isbn,
+      publicationDate: updatedBook.publicationDate,
+      genre: updatedBook.genre,
+      description: updatedBook.description,
+      rating: updatedBook.rating,
+      isPublished: updatedBook.isPublished,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
 const deleteBook = asyncHandler(async (req, res) => {});
 
 module.exports = {
