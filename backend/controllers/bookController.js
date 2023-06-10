@@ -12,22 +12,25 @@ const getAllBooks = asyncHandler(async (req, res) => {
     throw new Error("Internal server error");
   }
 });
-const getOneBook = asyncHandler(async (req, res) => {});
+
+const getOneBook = asyncHandler(async (req, res) => {
+  const { bookId } = req.params;
+
+  const book = await Book.findById(bookId).populate("chapters");
+
+  if (book) {
+    res.status(200).json(book);
+  } else {
+    res.status(404);
+    throw new Error("Book not found");
+  }
+});
 
 const createNewBook = asyncHandler(async (req, res) => {
   const { title, author, isbn, publicationDate, genre, description, rating } =
     req.body;
   const user = await User.findById(req.user._id);
 
-  console.log(
-    title,
-    author,
-    isbn,
-    publicationDate,
-    genre,
-    description,
-    user._id
-  );
   const bookExist = await Book.findOne({ isbn });
 
   if (bookExist) {
