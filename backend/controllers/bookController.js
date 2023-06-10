@@ -3,7 +3,15 @@ const Book = require("../models/bookModel");
 const User = require("../models/userModel");
 const Chapter = require("../models/chapterModel");
 
-const getAllBooks = asyncHandler(async (req, res) => {});
+const getAllBooks = asyncHandler(async (req, res) => {
+  try {
+    const books = await Book.find({ isPublished: false });
+    res.status(201).json({ books });
+  } catch (error) {
+    res.status(500);
+    throw new Error("Internal server error");
+  }
+});
 const getOneBook = asyncHandler(async (req, res) => {});
 
 const createNewBook = asyncHandler(async (req, res) => {
