@@ -9,9 +9,9 @@ const {
 
 const router = express.Router();
 
-router.get("/:bookId", getAllChapterForOneBook);
+router.get("/", getAllChapterForOneBook);
 router.get("/:chapterId", getOneChapter);
-router.post("/:bookId", createNewChapter);
+router.post("/", createNewChapter);
 router.put("/:chapterId", updateOneChapter);
 router.delete("/:chapterId", deleteOneChapter);
 
