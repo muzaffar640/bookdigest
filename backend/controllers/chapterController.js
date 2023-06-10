@@ -31,26 +31,54 @@ const createNewChapter = asyncHandler(async (req, res, next) => {
   }
 });
 
-const getAllChaptersForOneBook = asyncHandler(async (req, res, next) => {
-  try {
-    const { bookId } = req.params;
+const updateOneChapter = asyncHandler(async (req, res) => {
+  const { bookId, chapterId } = req.params;
+  const { title, content } = req.body;
+  const chapter = await Chapter.findById(chapterId);
 
-    // Find all chapters for the given book ID
-    const chapters = await Chapter.find({ book: bookId });
+  if (chapter) {
+    chapter.title = title || chapter.title;
+    chapter.content = content || chapter.content;
 
-    res.json(chapters);
-  } catch (error) {
-    next(error);
+    const updatedChapter = await chapter.save();
+    res.status(200).send({
+      _id: updatedChapter._id,
+      title: updatedChapter.title,
+      content: updatedChapter.content,
+      createdAt: updatedChapter.createdAt,
+      updatedAt: updatedChapter.updatedAt,
+    });
+  } else {
+    res.status(404);
+    throw new Error("Chapter not found");
   }
 });
-const getOneChapter = asyncHandler(async (req, res) => {});
-const updateOneChapter = asyncHandler(async (req, res) => {});
-const deleteOneChapter = asyncHandler(async (req, res) => {});
+
+const deleteOneChapter = asyncHandler(async (req, res) => {
+  try {
+    const { chapterId } = req.params;
+
+    if (!chapterId) {
+      res.status(404);
+      throw new Error("Chapter not found");
+    }
+    const chapter = await Chapter.findById(chapterId);
+    const book = await Book.findById(chapter.book);
+
+    book.chapters.pull(chapter._id);
+    await book.save();
+
+    // Delete the chapter
+    await Chapter.deleteOne({ _id: chapter._id });
+
+    res.status(200).json({ message: "Chapter deleted successfully" });
+  } catch (error) {
+    throw { status: error.status || error, message: error.message || error };
+  }
+});
 
 module.exports = {
   createNewChapter,
-  getAllChaptersForOneBook,
-  getOneChapter,
   updateOneChapter,
   deleteOneChapter,
 };
