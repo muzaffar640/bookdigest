@@ -1,15 +1,15 @@
 const express = require("express");
 const {
   createNewChapter,
-  getAllChapterForOneBook,
+  getAllChaptersForOneBook,
   getOneChapter,
   updateOneChapter,
   deleteOneChapter,
 } = require("../../controllers/chapterController");
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-router.get("/", getAllChapterForOneBook);
+router.get("/", getAllChaptersForOneBook);
 router.get("/:chapterId", getOneChapter);
 router.post("/", createNewChapter);
 router.put("/:chapterId", updateOneChapter);
