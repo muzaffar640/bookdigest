@@ -64,6 +64,10 @@ const bookSchema = new mongoose.Schema(
   }
 );
 
+bookSchema.path("chapters").validate(function (chapters) {
+  return chapters.length <= 20;
+}, "Maximum number of chapters exceeded (20)");
+
 const Book = mongoose.model("Book", bookSchema);
 
 module.exports = Book;
