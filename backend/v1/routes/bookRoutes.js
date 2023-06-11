@@ -12,7 +12,7 @@ const {
 router.get("/", getAllBooks);
 router.get("/:bookId", getOneBook);
 router.post("/", protect, createNewBook);
-router.put("/:bookId", updateBook);
-router.delete("/:bookId", deleteBook);
+router.put("/:bookId", protect, updateBook);
+router.delete("/:bookId", protect, deleteBook);
 
 module.exports = router;

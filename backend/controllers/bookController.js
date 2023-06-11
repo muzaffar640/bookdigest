@@ -1,7 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Book = require("../models/bookModel");
 const User = require("../models/userModel");
-const Chapter = require("../models/chapterModel");
 
 const getAllBooks = asyncHandler(async (req, res) => {
   try {
