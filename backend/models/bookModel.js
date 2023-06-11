@@ -53,6 +53,7 @@ const bookSchema = new mongoose.Schema(
     ],
     isPublished: Boolean,
     isDeleted: Boolean,
+    isApproved: Boolean,
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

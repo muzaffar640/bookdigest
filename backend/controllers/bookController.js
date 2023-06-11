@@ -4,7 +4,7 @@ const User = require("../models/userModel");
 
 const getAllBooks = asyncHandler(async (req, res) => {
   try {
-    const books = await Book.find({ isPublished: true });
+    const books = await Book.find({ isApproved: true });
     res.status(201).json({ books });
   } catch (error) {
     res.status(500);
@@ -36,6 +36,7 @@ const createNewBook = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Book already exist");
   }
+
   const book = await Book.create({
     title,
     author,
@@ -46,6 +47,7 @@ const createNewBook = asyncHandler(async (req, res) => {
     rating,
     isPublished: false,
     isDeleted: false,
+    isApproved: false,
     createdBy: user._id,
   });
 
@@ -61,6 +63,7 @@ const createNewBook = asyncHandler(async (req, res) => {
       rating: book.rating,
       isPublished: book.isPublished,
       isDeleted: book.isDeleted,
+      isApproved: book.isApproved,
       createdBy: book.createdBy,
       createdAt: book.createdAt,
       updatedAt: book.updatedAt,
@@ -82,6 +85,7 @@ const updateBook = asyncHandler(async (req, res) => {
     description,
     rating,
     isPublished,
+    isApproved,
   } = req.body;
 
   const book = await Book.findById(bookId);
@@ -94,6 +98,7 @@ const updateBook = asyncHandler(async (req, res) => {
     book.description = description || book.description;
     book.rating = rating || book.rating;
     book.isPublished = isPublished || book.isPublished;
+    book.isApproved = isApproved || book.isApproved;
 
     const updatedBook = await book.save();
 
@@ -106,6 +111,7 @@ const updateBook = asyncHandler(async (req, res) => {
       description: updatedBook.description,
       rating: updatedBook.rating,
       isPublished: updatedBook.isPublished,
+      isApproved: updateBook.isApproved,
     });
   } else {
     res.status(404);
