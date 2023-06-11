@@ -10,10 +10,12 @@ const chapterSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
+      maxLength: 120,
     },
     content: {
       type: String,
       required: true,
+      mazLength: 5000,
     },
   },
   {

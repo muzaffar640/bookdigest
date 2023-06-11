@@ -5,27 +5,33 @@ const bookSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
+      maxLength: 120,
     },
     author: {
       type: String,
       required: true,
+      maxLength: 100,
     },
     isbn: {
       type: String,
       required: true,
       unique: true,
+      maxLength: 50,
     },
     publicationDate: {
       type: Date,
       required: true,
+      maxLength: 50,
     },
     genre: {
       type: String,
       required: true,
+      maxLength: 150,
     },
     description: {
       type: String,
       required: true,
+      maxLength: 1000,
     },
     rating: {
       type: Number,
