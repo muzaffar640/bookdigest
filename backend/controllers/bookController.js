@@ -89,33 +89,39 @@ const updateBook = asyncHandler(async (req, res) => {
   } = req.body;
 
   const book = await Book.findById(bookId);
-  if (book) {
-    book.title = title || book.title;
-    book.author = author || book.author;
-    book.isbn = isbn || book.isbn;
-    book.publicationDate = publicationDate || book.publicationDate;
-    book.genre = genre || book.genre;
-    book.description = description || book.description;
-    book.rating = rating || book.rating;
-    book.isPublished = isPublished || book.isPublished;
-    book.isApproved = isApproved || book.isApproved;
 
-    const updatedBook = await book.save();
+  if (req.user._id === book.createdBy || req.user.role === "admin") {
+    if (book) {
+      book.title = title || book.title;
+      book.author = author || book.author;
+      book.isbn = isbn || book.isbn;
+      book.publicationDate = publicationDate || book.publicationDate;
+      book.genre = genre || book.genre;
+      book.description = description || book.description;
+      book.rating = rating || book.rating;
+      book.isPublished = isPublished || book.isPublished;
+      book.isApproved = isApproved || book.isApproved;
 
-    res.status(200).send({
-      title: updatedBook.title,
-      author: updatedBook.author,
-      isbn: updatedBook.isbn,
-      publicationDate: updatedBook.publicationDate,
-      genre: updatedBook.genre,
-      description: updatedBook.description,
-      rating: updatedBook.rating,
-      isPublished: updatedBook.isPublished,
-      isApproved: updateBook.isApproved,
-    });
+      const updatedBook = await book.save();
+
+      res.status(200).send({
+        title: updatedBook.title,
+        author: updatedBook.author,
+        isbn: updatedBook.isbn,
+        publicationDate: updatedBook.publicationDate,
+        genre: updatedBook.genre,
+        description: updatedBook.description,
+        rating: updatedBook.rating,
+        isPublished: updatedBook.isPublished,
+        isApproved: updateBook.isApproved,
+      });
+    } else {
+      res.status(404);
+      throw new Error("User not found");
+    }
   } else {
     res.status(404);
-    throw new Error("User not found");
+    throw new Error("You don't have access to update this book");
   }
 });
 
