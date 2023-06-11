@@ -4,7 +4,7 @@ const User = require("../models/userModel");
 
 const getAllBooks = asyncHandler(async (req, res) => {
   try {
-    const books = await Book.find({ isApproved: true });
+    const books = await Book.find({ isApproved: true, isDeleted: false });
     res.status(201).json({ books });
   } catch (error) {
     res.status(500);
@@ -117,7 +117,7 @@ const updateBook = asyncHandler(async (req, res) => {
       });
     } else {
       res.status(404);
-      throw new Error("User not found");
+      throw new Error("Book not found");
     }
   } else {
     res.status(404);
@@ -125,7 +125,28 @@ const updateBook = asyncHandler(async (req, res) => {
   }
 });
 
-const deleteBook = asyncHandler(async (req, res) => {});
+const deleteBook = asyncHandler(async (req, res) => {
+  const { bookId } = req.params;
+  const { isDeleted } = req.body;
+
+  const book = await Book.findById(bookId);
+
+  if (req.user._id === book.createdBy || req.user.role === "admin") {
+    if (book) {
+      book.isDeleted = true;
+
+      await book.save();
+
+      res.status(200).json({ message: "Book deleted successfully" });
+    } else {
+      res.status(404);
+      throw new Error("Book not found");
+    }
+  } else {
+    res.status(404);
+    throw new Error("You don't have access to update this book");
+  }
+});
 
 module.exports = {
   getAllBooks,
