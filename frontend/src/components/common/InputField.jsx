@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Icon } from "./icon";
+import { Icon } from "./Icon";
 
 export const InputField = ({
   label,
