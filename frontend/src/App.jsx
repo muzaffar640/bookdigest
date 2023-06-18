@@ -1,19 +1,6 @@
-import "./App.css";
-import { Header } from "./components/Header";
-import { SideBar } from "./components/SideBar";
-import { Flowbite } from "flowbite-react";
+import { useRoutes } from "react-router-dom";
+import { routeConfig } from "./routes";
 
-function App() {
-  return (
-    <>
-      <div className="p-5 bg-white dark:bg-gray-900 antialiased">
-        <Flowbite>
-          <Header />
-          <SideBar />
-        </Flowbite>
-      </div>
-    </>
-  );
-}
-
-export default App;
+export const App = () => {
+  return useRoutes(routeConfig);
+};
