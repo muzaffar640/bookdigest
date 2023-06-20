@@ -5,3 +5,4 @@
 3. Pagination
 4. caching (if required)
 5. Documentation
+6. Add test cases
