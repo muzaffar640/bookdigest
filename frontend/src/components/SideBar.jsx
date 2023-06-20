@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Sidebar } from "flowbite-react";
 import {
   HiArrowSmRight,
@@ -8,9 +9,12 @@ import {
   HiUser,
 } from "react-icons/hi";
 
-export const SideBar = () => {
+export const SideBar = ({ className }) => {
   return (
-    <Sidebar aria-label="Sidebar with multi-level dropdown example">
+    <Sidebar
+      aria-label="Sidebar with multi-level dropdown example"
+      className={`${className} custom-bg`}
+    >
       <Sidebar.Items>
         <Sidebar.ItemGroup>
           <Sidebar.Item href="#" icon={HiChartPie}>
@@ -41,4 +45,8 @@ export const SideBar = () => {
       </Sidebar.Items>
     </Sidebar>
   );
+};
+
+SideBar.propTypes = {
+  className: PropTypes.string,
 };
