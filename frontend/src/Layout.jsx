@@ -6,19 +6,26 @@ import { Flowbite } from "flowbite-react";
 
 export const Layout = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
-  console.log("ismenuopen", isMenuOpen);
+
   return (
-    <div className="h-screen p-5 bg-white dark:bg-gray-900 antialiased">
+    <div className="h-screen p-5 bg-white dark:bg-gray-900 antialiased relative">
       <Flowbite>
         <Header isMenuOpen={isMenuOpen} onMenuToggle={setMenuOpen} />
-        <SideBar
-          className={`z-40  ease-in-out duration-300 ${
-            isMenuOpen
-              ? "translate-x-0 "
-              : "-translate-x-full !bg-transparent !dark:bg-red-400"
-          }`}
-        />
-        <Outlet />
+        <div className="flex flex-col md:flex-row-reverse">
+          <div className="flex-grow">
+            <Outlet />
+          </div>
+          {isMenuOpen && (
+            <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-50 md:hidden">
+              <SideBar />
+            </div>
+          )}
+          {!isMenuOpen && (
+            <div className="hidden md:block">
+              <SideBar />
+            </div>
+          )}
+        </div>
       </Flowbite>
     </div>
   );
